@@ -5,15 +5,16 @@
 # For technical reasons, this file is *NOT* reloaded automatically when you use
 # `jekyll serve`. If you change this file, please restart the server process.
 
-minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
+minimal_mistakes_skin    : "neon" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Ebb and Flow: A Data Blog"
-title_separator          : "-"
+title                    : "Ebb and Flow"
+subtitle                 : "A Data Blog"
+title_separator          : "|"
 name                     : "George Aaron Garcia"
-description              : "A spot for my data projects."
-url                      : # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+description              : "A spot for my data projects; data exploration and mining, machine learning, business analytics, visualizations and communication."
+url                      : "https://GeorgeAaronG.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
@@ -62,7 +63,7 @@ naver_site_verification  :
 
 # Social Sharing
 twitter:
-  username               :
+  username               : "GeorgeAaronG"
 facebook:
   username               :
   app_id                 :
@@ -95,7 +96,7 @@ author:
   codepen          :
   dribbble         :
   flickr           :
-  facebook         :
+  facebook         : "georgeaaron.garcia"
   foursquare       :
   github           : "GeorgeAaronG"
   gitlab           :
@@ -109,7 +110,7 @@ author:
   stackoverflow    : # "123456/username" (the last part of your profile url, e.g. https://stackoverflow.com/users/123456/username)
   steam            : # "steamId" (the last part of your profile url, e.g. https://steamcommunity.com/id/steamId/)
   tumblr           :
-  twitter          :
+  twitter          : "georgeaarong"
   vine             :
   weibo            :
   xing             :
