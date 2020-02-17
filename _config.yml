@@ -5,12 +5,11 @@
 # For technical reasons, this file is *NOT* reloaded automatically when you use
 # `jekyll serve`. If you change this file, please restart the server process.
 
-minimal_mistakes_skin    : "aqua" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
+minimal_mistakes_skin    : "contrast" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Ebb and Flow"
-subtitle                 : "A Data Blog"
+title                    : "Ebb and Flow: A Data Blog"
 title_separator          : "|"
 name                     : "George Aaron Garcia"
 description              : "A spot for my data projects; data exploration and mining, machine learning, business analytics, visualizations and communication."
