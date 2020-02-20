@@ -2,7 +2,7 @@
 title: "About"
 permalink: /about/
 header:
-  image: "/images/laptop.jpg"
+  image: "/images/laptopCoding2.jpg"
 ---
 
 Hello :)
@@ -11,4 +11,4 @@ I'm George, a junior data scientist from Texas ethusiastic about exploratory ana
 
 Thanks for viewing my posts, and feel free to reach out to me on social media or email.
 
-- George
+George
