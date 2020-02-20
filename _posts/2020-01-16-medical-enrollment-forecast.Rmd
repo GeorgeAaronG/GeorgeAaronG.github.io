@@ -1,0 +1,243 @@
+---
+title: "Medical College Data Modeling: Enrollments"
+date: 2020-01-16
+tags: [machine learning, forecasting]
+header:
+  image: "/images/enrollmentForecastPic.png"
+excerpt: "Machine Learning, Forecasting"
+output: 
+  html_notebook:
+    code_folding: hide
+    toc: true
+    number_sections: true
+    toc_depth: 2
+    toc_float:
+      collapsed: false
+---
+The following script uses a client's digital marketing campaign, budget and student enrollment data to forecast student enrollments for the coming year.
+```{r message =  FALSE}
+# Libraries
+library(caret)
+library(skimr)
+library(corrplot)
+```
+
+# Imported Data
+```{r}
+# Import and clean data
+data <- read.csv("C:/Users/george/Documents/Digital Marketing Data/Triggers/spendingAndEnrollments.csv")
+dataRGV <- data
+dataRGV
+```
+
+## Skimmed Data
+```{r}
+# Split data
+x <- subset(dataRGV, select = -Enrollments)
+y <- subset(dataRGV, select = Enrollments)
+
+# Data summary
+skimX <- skim_to_wide(x)
+skimY <- skim_to_wide(y)
+skimX
+skimY
+
+# Data partition
+seed <- 123
+set.seed(seed)
+dataPart <- createDataPartition(y$Enrollments,
+                              p = .70,
+                              list = FALSE)
+xTrain <- x[dataPart,]
+yTrain <- y[dataPart,]
+
+xTest <- x[-dataPart,]
+yTest <- y[-dataPart,]
+```
+
+# Training Data Visualization and Correlation
+```{r}
+# Create numeric set of x variables
+xTrainNum <- as.data.frame(sapply(xTrain, as.numeric))
+
+# Boxplot of predictors
+boxplot(xTrainNum)
+boxplot(yTrain)
+
+# Histograms
+hist(xTrainNum$Campaign)
+hist(xTrainNum$Spending)
+hist(as.numeric(yTrain))
+
+# Correlation plots and correlation ceiling
+correlations <- cor(xTrainNum)
+corrplot(correlations, method = "number", order = "hclust")
+```
+
+# ML Algo Training Performance
+```{r}
+# Model set up
+dmy <- dummyVars(" ~ .", data = xTrain, fullRank = T)
+xTrainDummy <- data.frame(predict(dmy, newdata = xTrain))
+
+set.seed(seed)
+ctrl <- trainControl(method = "repeatedcv", number = 10, repeats = 10)
+
+
+# Predictive modeling w/ built-in feature selection
+gridBstLm <- expand.grid(mstop = seq(8, 12, by = 1), nu = 0.5)
+set.seed(seed)
+modelBstLm <- train(x = xTrainDummy, y = yTrain, 
+                method = "BstLm", 
+                preProc = c("center", "scale", "YeoJohnson", "spatialSign"),
+                tuneGrid = gridBstLm,
+                trControl = ctrl)
+modelBstLm # RMSE = 5.36
+
+gridEnet <- expand.grid(fraction = seq(0.6, 0.8, by = 0.1), lambda = 0)
+set.seed(seed)
+modelEnet <- train(x = xTrainDummy, y = yTrain, 
+                method = "enet", 
+                preProc = c("center", "scale", "YeoJohnson", "spatialSign"),
+                tuneGrid = gridEnet,
+                trControl = ctrl)
+modelEnet # RMSE = 5.15
+
+gridGlmNet <- expand.grid(alpha = c(0.9, 1, 1.1), lambda = c(0.6, 0.7, 0.8))
+set.seed(seed)
+modelGlmNet <- train(x = xTrainDummy, y = yTrain, 
+                method = "glmnet",
+                preProc = c("center", "scale", "YeoJohnson", "spatialSign"),
+                tuneGrid = gridGlmNet,
+                trControl = ctrl)
+modelGlmNet # RMSE = 5.17
+
+gridLars <- expand.grid(fraction = c(0.65, 0.7, 0.75))
+set.seed(seed)
+modelLars <- train(x = xTrainDummy, y = yTrain, 
+                method = "lars", 
+                preProc = c("center", "scale", "YeoJohnson", "spatialSign"),
+                tuneGrid = gridLars,
+                trControl = ctrl)
+modelLars # RMSE = 5.14
+
+gridRF <- expand.grid(mtry = c(1.5, 2, 2.5))
+set.seed(seed)
+modelRF <- train(x = xTrainDummy, y = yTrain, 
+                method = "rf", 
+                preProc = c("center", "scale", "YeoJohnson", "spatialSign"),
+                tuneGrid = gridRF,
+                trControl = ctrl)
+modelRF # RMSE = 4.99, R^2 = 0.74
+
+```
+
+## Model Comparison Viz
+```{r}
+# Compare model performances
+modelResults <- resamples(list(BstLm = modelBstLm, Enet = modelEnet, GlmNet = modelGlmNet,
+                               Lars = modelLars, RF = modelRF))
+summary(modelResults)
+dotplot(modelResults)
+
+# Check differences
+modelDiff <- diff(modelResults)
+summary(modelDiff)
+dotplot(modelDiff)
+```
+
+# Finalized Model Performance on Test Data
+```{r}
+# Transform test data
+dmyTest <- dummyVars(" ~ .", data = xTest, fullRank = T)
+xTestDummy <- data.frame(predict(dmyTest, newdata = xTest))
+
+# Evaluate on test data
+predictRF <- predict(modelRF, newdata = xTestDummy)
+RMSE(predictRF, yTest)
+R2(predictRF, yTest)
+```
+## Final Model Test Details
+```{r}
+# Finalize Model
+library(randomForest)
+set.seed(seed)
+preProcParams <- preProcess(xTrainDummy, method = c("center", "scale", "YeoJohnson", "spatialSign"))
+xTrainTrans <- predict(preProcParams, xTrainDummy)
+finalModel <- randomForest(x = xTrainTrans, y = yTrain, mstop = 10)
+finalModel
+summary(finalModel)
+
+# Evaluate on test data
+xTestNum <- as.data.frame(sapply(xTest, as.numeric))
+set.seed(seed)
+xTestTrans <- predict(preProcParams, xTestDummy)
+finalModelPredict <- predict(finalModel, newdata = xTestTrans, mstop = 10)
+
+# Calculate performance
+finalModelRMSE <- RMSE(finalModelPredict, yTest)
+finalModelR2 <- R2(finalModelPredict, yTest)
+finalModelRMSE
+```
+
+# Train and Evaluate RF + BSTM Model Ensemble
+```{r}
+library(caretEnsemble)
+
+# Train a list of models with caretList()
+listOfModels <- c('rf', 'BstLm')
+set.seed(seed)
+modelList <- caretList(x = xTrainDummy, y = yTrain, 
+                    trControl = ctrl,
+                    preProc = c("center", "scale", "YeoJohnson", "spatialSign"), 
+                    methodList = listOfModels)
+
+# Model results and correlation
+results <- resamples(modelList)
+summary(results)
+dotplot(results)
+modelCor(results)
+
+# Combine the models with caretEnsemble()
+set.seed(seed)
+modelEnsemble <- caretEnsemble(modelList, metric = "RMSE",
+                              trControl = trainControl(number = 2))
+
+summary(modelEnsemble) # RMSE = 5.0463
+
+# Evaluate on test data
+predictEnsemble <- predict(modelEnsemble, newdata = xTestDummy)
+RMSE(predictEnsemble, yTest)
+R2(predictEnsemble, yTest)
+```
+
+# Final Model Prediction: Forecasted Enrollments
+
+Based on the following December 2019 spending figures:
+
+* **LVN**: $1,271.86
+* **Med Asst**: $2,568.00
+* **Pharmacy**: $1,015.64
+* **Nurse Aide**: $939.75
+* **Med Asst**: $1,688.54
+
+Assuming additional spending by RGV College:
+
+* Dec + 10%
+* Dec + 15%
+* Dec + 20%
+    
+```{r}
+# Import and clean data
+predData <- read.csv("C:/Users/george/Documents/Digital Marketing Data/Triggers/predictedSpendingAndEnrollments.csv")
+
+# Transform forecast data
+dmyPredData <- dummyVars(" ~ .", data = predData, fullRank = T)
+predDummy <- data.frame(predict(dmyPredData, newdata = predData))
+
+# Predict forecast data
+predEnrollments <- data.frame(predict(modelEnsemble, newdata = predDummy))
+predExport <- data.frame(c(predData,predEnrollments))
+predExport
+#write.csv(predExport, "C:/Users/george/Documents/Digital Marketing Data/Triggers/predictedExport.csv", row.names = FALSE)
+```
