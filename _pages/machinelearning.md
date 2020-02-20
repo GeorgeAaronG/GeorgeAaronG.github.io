@@ -4,7 +4,7 @@ permalink: /data-projects/
 title: "Latest Projects"
 author_profile: true
 header:
-  image: "/images/earth.jpg"
+  image: "/images/dataViz.png"
 ---
 
 
