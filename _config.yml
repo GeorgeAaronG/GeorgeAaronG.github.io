@@ -9,7 +9,7 @@ minimal_mistakes_skin    : "contrast" # "air", "aqua", "contrast", "dark", "dirt
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Ebb and Flow: A Data Blog"
+title                    : "Data-driven Projects and Visualization"
 title_separator          : "|"
 name                     : "George Aaron Garcia"
 description              : "A spot for my data projects; data exploration and mining, machine learning, business analytics, visualizations and communication."
