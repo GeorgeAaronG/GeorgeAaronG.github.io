@@ -1,9 +1,11 @@
 # main links
 main:
-  - title: "About"
-    url: /about/
-  - title: "My Data Projects"
+  - title: "Data Projects"
     url: /data-projects/
+  - title: "Visualizations"
+    url: /viz
+  - title: "Mission"
+    url: /about/
   # - title: "About"
   #   url: https://mmistakes.github.io/minimal-mistakes/about/
   # - title: "Sample Posts"
