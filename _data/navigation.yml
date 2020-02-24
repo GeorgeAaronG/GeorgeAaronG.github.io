@@ -3,7 +3,7 @@ main:
   - title: "Data Projects"
     url: /data-projects/
   - title: "Visualizations"
-    url: /viz
+    url: /viz/
   - title: "Mission"
     url: /about/
   # - title: "About"
