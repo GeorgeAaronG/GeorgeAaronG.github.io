@@ -1,6 +1,6 @@
 ---
 title: "Mission Statement"
-permalink: /about/
+permalink: /mission/
 header:
   image: "/images/laptopCoding2.jpg"
 ---
