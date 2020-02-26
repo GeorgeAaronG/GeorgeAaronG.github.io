@@ -13,10 +13,10 @@ header:
   caption: "Photo credit: [**Unknown**](https://google.com)"
 excerpt: "Check out my Tableau stories and visualizations at Tableau Public"
 intro: 
-  - excerpt: 'These are some of my visualizations using *Tableau*, *Power BI*, and packages from *R* and *Python*.'
+  - excerpt: 'Click the link below to visit my online *Tableau* profile.'
 feature_row:
     url: "https://public.tableau.com/profile/george.garcia3963#!/"
-    btn_label: "My Tableau Online"
+    btn_label: "Tableau Public"
     btn_class: "btn--primary"
 ---
 
