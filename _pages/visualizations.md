@@ -10,10 +10,9 @@ header:
   actions:
     - label: "Tableau"
       url: "https://public.tableau.com/profile/george.garcia3963#!/"
-  caption: "Photo credit: [**Unknown**](https://google.com)"
-excerpt: "Check out my Tableau stories and visualizations at Tableau Public"
+excerpt: "Check out my Tableau stories and visualizations on Tableau Public by clicking below."
 intro: 
-  - excerpt: 'Click the link below to visit my online *Tableau* profile.'
+  - excerpt: '[Click here to visit my online *Tableau* profile.](https://public.tableau.com/profile/george.garcia3963#!/)'
 feature_row:
     url: "https://public.tableau.com/profile/george.garcia3963#!/"
     btn_label: "Tableau Public"
